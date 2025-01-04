@@ -1,4 +1,5 @@
-./*.DS_STORE
-./.zig-cache/
-./DistributedComputing
-./DistributedCompting.o
+*.DS_STORE
+.zig-cache/
+zig-out/
+DistributedComputing
+DistributedCompting.o

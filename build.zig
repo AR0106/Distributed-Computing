@@ -36,10 +36,54 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    // Add Assembly Files
+    switch (@import("builtin").cpu.arch) {
+        .aarch64 => exe.addAssemblyFile(.{
+            .cwd_relative = "assembly/aarch64/mem.s",
+        }),
+        .x86_64 => exe.addAssemblyFile(.{
+            .cwd_relative = "assembly/x86/mem.s",
+        }),
+        else => {
+            @panic("Unsupported architecture");
+        },
+    }
+
+    // Add C Files
+    exe.addCSourceFiles(.{
+        .files = &.{ "c/net.c", "c/proc.c" },
+    });
+    exe.addIncludePath(.{ .cwd_relative = "c/" });
+
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
     b.installArtifact(exe);
+
+    const exe_check = b.addExecutable(.{
+        .name = "foo",
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    switch (@import("builtin").cpu.arch) {
+        .aarch64 => exe_check.addAssemblyFile(.{
+            .cwd_relative = "assembly/aarch64/mem.s",
+        }),
+        .x86_64 => exe_check.addAssemblyFile(.{
+            .cwd_relative = "assembly/x86/mem.s",
+        }),
+        else => {
+            @panic("Unsupported architecture");
+        },
+    }
+    exe_check.addCSourceFiles(.{
+        .files = &.{ "c/net.c", "c/proc.c" },
+    });
+    exe_check.addIncludePath(.{ .cwd_relative = "c/" });
+
+    const check = b.step("check", "Check if file compiles");
+    check.dependOn(&exe_check.step);
 
     // This *creates* a Run step in the build graph, to be executed when another
     // step is evaluated that depends on it. The next line below will establish

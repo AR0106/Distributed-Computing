@@ -1,0 +1,1 @@
+char *getLocalNetworkAddress(char *interface);
