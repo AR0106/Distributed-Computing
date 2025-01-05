@@ -3,7 +3,9 @@
 
 #include <arpa/inet.h>
 #include <net/if.h>
+#ifdef __FreeBSD__
 #include <net/if_var.h>
+#endif
 #include <netinet/in.h>
 #include <string.h>
 #include <sys/errno.h>
@@ -29,7 +31,9 @@ char *getLocalNetworkAddress(char *interface) {
   char *address = inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
 
   if (!strcmp(address, "0.0.0.0")) {
-    perror("IPv4 Address Not Found For Specified Interface");
+    char error_msg[256];
+    snprintf(error_msg, sizeof(error_msg), "IPv4 Address Not Found For Specified Interface: %s", interface);
+    perror(error_msg);
   }
 
   return address;

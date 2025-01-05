@@ -1,13 +1,12 @@
-; mem.set
-section .text
-global getStackPointer
-global addNumbers
+.section .text
+.global getStackPointer
+.global addNumbers
 
 getStackPointer:
-  mov rax, rsp
+  movl %esp, %eax
   ret
 
 addNumbers:
-  mov eax, edi
-  add eax, esi
+  movl %edi, %eax
+  addl %esi, %eax
   ret

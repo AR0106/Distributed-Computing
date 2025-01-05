@@ -54,6 +54,7 @@ pub fn build(b: *std.Build) void {
         .files = &.{ "c/net.c", "c/proc.c" },
     });
     exe.addIncludePath(.{ .cwd_relative = "c/" });
+    exe.linkLibC();
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
@@ -81,6 +82,7 @@ pub fn build(b: *std.Build) void {
         .files = &.{ "c/net.c", "c/proc.c" },
     });
     exe_check.addIncludePath(.{ .cwd_relative = "c/" });
+    exe_check.linkLibC();
 
     const check = b.step("check", "Check if file compiles");
     check.dependOn(&exe_check.step);

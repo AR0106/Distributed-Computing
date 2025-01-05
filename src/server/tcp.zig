@@ -7,9 +7,13 @@ const net = std.net;
 const print = std.debug.print;
 
 pub fn initServer() !net.Server {
-    const ip = std.mem.span(cnet.getLocalNetworkAddress(@constCast("en0")));
+    var ip = std.mem.span(cnet.getLocalNetworkAddress(@constCast("en0")));
     if (std.mem.eql(u8, ip, "0.0.0.0")) {
-        @panic("Unable to get Local Network Test Address");
+        ip = std.mem.span(cnet.getLocalNetworkAddress(@constCast("eth0")));
+    }
+
+    if (std.mem.eql(u8, ip, "0.0.0.0")) {
+        @panic("Local Network Address Not Found");
     }
 
     print("Local Network Test Address: {s}\n", .{ip});
