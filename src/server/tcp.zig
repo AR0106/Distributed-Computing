@@ -1,5 +1,5 @@
 const std = @import("std");
-const cnet = @cImport({
+const c_net = @cImport({
     @cInclude("net.h");
 });
 const net = std.net;
@@ -7,9 +7,9 @@ const net = std.net;
 const print = std.debug.print;
 
 pub fn initServer() !net.Server {
-    var ip = std.mem.span(cnet.getLocalNetworkAddress(@constCast("en0")));
+    var ip = std.mem.span(c_net.getLocalNetworkAddress(@constCast("en0")));
     if (std.mem.eql(u8, ip, "0.0.0.0")) {
-        ip = std.mem.span(cnet.getLocalNetworkAddress(@constCast("eth0")));
+        ip = std.mem.span(c_net.getLocalNetworkAddress(@constCast("eth0")));
     }
 
     if (std.mem.eql(u8, ip, "0.0.0.0")) {

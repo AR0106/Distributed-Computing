@@ -16,6 +16,10 @@ const procMem = struct {
     inode: []const u8,
 };
 
+fn readAtAddress(address: usize) u8 {
+    return @as(*u8, @ptrFromInt(address)).*;
+}
+
 fn getPid() i32 {
     switch (@import("builtin").os.tag) {
         .linux => return @intCast(os.linux.getpid()),
@@ -28,6 +32,8 @@ fn getPid() i32 {
 pub fn copyMem() !?procMem {
     std.debug.print("PID: {d}\n", .{getPid()});
     std.debug.print("SP: {x}\n", .{getStackPointer()});
+
+    std.debug.print("First Memory Address Value: {x}:{d}\n", .{ readAtAddress(getStackPointer()), readAtAddress(getStackPointer()) });
 
     return null;
 }
