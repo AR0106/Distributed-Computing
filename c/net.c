@@ -32,7 +32,8 @@ char *getLocalNetworkAddress(char *interface) {
 
   if (!strcmp(address, "0.0.0.0")) {
     char error_msg[256];
-    snprintf(error_msg, sizeof(error_msg), "IPv4 Address Not Found For Specified Interface: %s", interface);
+    snprintf(error_msg, sizeof(error_msg),
+             "IPv4 Address Not Found For Specified Interface: %s", interface);
     perror(error_msg);
   }
 

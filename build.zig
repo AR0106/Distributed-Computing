@@ -51,7 +51,7 @@ pub fn build(b: *std.Build) void {
 
     // Add C Files
     exe.addCSourceFiles(.{
-        .files = &.{ "c/net.c", "c/proc.c" },
+        .files = &.{ "c/net.c", "c/proc.c", "c/memory.c" },
     });
     exe.addIncludePath(.{ .cwd_relative = "c/" });
     exe.linkLibC();
@@ -79,7 +79,7 @@ pub fn build(b: *std.Build) void {
         },
     }
     exe_check.addCSourceFiles(.{
-        .files = &.{ "c/net.c", "c/proc.c" },
+        .files = &.{ "c/net.c", "c/proc.c", "c/memory.c" },
     });
     exe_check.addIncludePath(.{ .cwd_relative = "c/" });
     exe_check.linkLibC();

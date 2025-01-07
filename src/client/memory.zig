@@ -1,13 +1,20 @@
+// Zig Imports
 const std = @import("std");
 const mem = std.mem;
 const os = std.os;
 
+// C Imports
 const cProc = @cImport(@cInclude("proc.h"));
+const cMem = @cImport(@cInclude("memory.h"));
 
-// Assembly Functions
+// Assembly Imports
 extern fn getStackPointer() usize;
 extern fn addNumbers(a: i32, b: i32) i32;
 
+// Errors
+const MemoryError = error{ReadAtAddressError};
+
+// Structs
 const procMem = struct {
     addr: []const u8,
     perms: []const u8,
@@ -17,7 +24,9 @@ const procMem = struct {
 };
 
 fn readAtAddress(address: usize) u8 {
-    return @as(*u8, @ptrFromInt(address)).*;
+    std.debug.print("Reading at address: {x}\n", .{address});
+    // return @as(*u8, @ptrFromInt(address)).*;
+    return 0;
 }
 
 fn getPid() i32 {

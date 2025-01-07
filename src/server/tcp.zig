@@ -6,14 +6,31 @@ const net = std.net;
 
 const print = std.debug.print;
 
-pub fn initServer() !net.Server {
-    var ip = std.mem.span(c_net.getLocalNetworkAddress(@constCast("en0")));
+pub fn initServer(interfaceOverride: [*c]const u8) !net.Server {
+    const _defaultInterface: [*:0]const u8 = "en0";
+
+    const interfaceOverrideSlice: []const u8 = interfaceOverride[0..std.mem.len(interfaceOverride)];
+
+    var _interfaceOverride: [*:0]const u8 = undefined;
+
+    if (std.mem.eql(u8, interfaceOverrideSlice, "")) {
+        _interfaceOverride = _defaultInterface;
+    } else {
+        _interfaceOverride = interfaceOverride;
+    }
+
+    var ip = std.mem.span(c_net.getLocalNetworkAddress(@constCast(_interfaceOverride)));
     if (std.mem.eql(u8, ip, "0.0.0.0")) {
-        ip = std.mem.span(c_net.getLocalNetworkAddress(@constCast("eth0")));
+        _interfaceOverride = "eth0";
+        ip = std.mem.span(c_net.getLocalNetworkAddress(@constCast(_interfaceOverride)));
     }
 
     if (std.mem.eql(u8, ip, "0.0.0.0")) {
-        @panic("Local Network Address Not Found");
+        // @panic("Local Network Address Not Found");
+        std.debug.print("Unable to interface with local area network\n", .{});
+        std.debug.print("Defaulting to localhost\n", .{});
+
+        ip = @constCast("127.0.0.1");
     }
 
     print("Local Network Test Address: {s}\n", .{ip});

@@ -16,7 +16,16 @@ pub fn main() !void {
 
     _ = try procClient.copyMem();
 
-    var server = tcp.initServer() catch |err| {
+    var args = std.process.args();
+    _ = args.skip();
+    const interface = args.next();
+
+    const interfacePtr = if (interface) |i|
+        if (i.len > 0) i.ptr else ""
+    else
+        "";
+
+    var server = tcp.initServer(interfacePtr) catch |err| {
         print("{s}", .{@errorName(err)});
         @panic("Failed to Start Server");
     };
